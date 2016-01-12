@@ -1,0 +1,390 @@
+<html>
+<head>
+<title>
+  FBOSS DEMOS
+</title>
+</head>
+
+<body>
+<h1>FBOSS DEMOS</h1>
+
+<h2>OVERVIEW</h2>
+
+<p>
+Start with the <a href="fboss_hardware_overview.html">overview of the basic
+        components of an FBOSS Wedge switch</a>.
+</p>
+
+<p>
+Then look at the <a href="fboss_config.html">configuration we have setup for
+        you</a>.
+</p>
+
+<p>
+And finally, where you can find all this stuff:</p>
+
+<ul>
+  <li>The entire BMC (software) is Open Source. It's a small linux image with a
+  bunch of extra software. You can find it at <a
+    href="http://github.com/facebook/openbmc">http://github.com/facebook/openbmc</a>
+  <li>The FBOSS Agent which uses OpenNSL to communicate to the Trident is open
+  source and can be found at <a
+    href="http://github.com/facebook/fboss">http://github.com/facebook/fboss</a>
+  <li>OpenNetworkLinux is a distribution of Debian for Wedge switches with an
+  FBOSS repository and can be found at <a
+    href="https://github.com/sonoble/OpenNetworkLinux">https://github.com/sonoble/OpenNetworkLinux</a>
+  <li>The specs and design files for the hardware are open-source and available
+  from <a
+    href="http://www.opencompute.org/wiki/Networking/SpecsAndDesigns#Facebook_Wedge">http://www.opencompute.org/wiki/Networking/SpecsAndDesigns#Facebook_Wedge</a>
+  <li>You can buy the hardware from <a
+    href="http://www.edge-core.com/ProdDtl.asp?sno=477#">Edge-Core</a>.
+  <li>You can find these demo pages at <a href="http://www.github.com/jaymzh/scale14x-fboss-demo">http://www.github.com/jaymzh/scale14x-fboss-demo</a>
+</ul>
+
+<h2>HARDWARE INFO DEMO</H2>
+
+<p>
+The microserver can query a REST API on the BMC (bmc software is all open-source). Try it!</p>
+<ul>
+  <li>List APIs: <blockquote>bmc_stats.py -l</blockquote></li>
+  <li>Call API: <blockquote>bmc_stats.py -g /api/sys/mb</blockquote></li>
+  <li>Call all APIs: <blockquote>bmc_stats.py -g all</blockquote></li>
+</ul>
+
+<h2>TOOLS DEMO</h2>
+
+<p>
+Start by looking at the <a href="fboss_config.html">configuration</a>.</p>
+
+<p>
+Here's a walk through using the tools to explore.
+
+<h3>List physical ports</h3>
+
+<p>
+You can use <code>fboss_routes.py list_ports</code> to list all physical ports -
+given that only the first 8 ports are cabled on these switches, the output is a bit more managable taking only the first 8 lines:</p>
+
+<blockquote>
+<pre> 
+root@fboss1:~# fboss_route.py list_ports | head -8
+Port 1: PortStatus(enabled=True, up=True): 
+Port 2: PortStatus(enabled=True, up=True): 
+Port 3: PortStatus(enabled=True, up=True): 
+Port 4: PortStatus(enabled=True, up=True): 
+Port 5: PortStatus(enabled=True, up=False): 
+Port 6: PortStatus(enabled=True, up=False): 
+Port 7: PortStatus(enabled=True, up=False): 
+Port 8: PortStatus(enabled=True, up=False): 
+</pre>
+</blockquote>
+
+<p>
+Note that only 4 are in use on fboss1 but on fboss2 there are 8:</p>
+
+<blockquote>
+<pre> 
+root@fboss2:~# fboss_route.py list_ports | head -8
+Port 1: PortStatus(enabled=True, up=True): 
+Port 2: PortStatus(enabled=True, up=True): 
+Port 3: PortStatus(enabled=True, up=True): 
+Port 4: PortStatus(enabled=True, up=True): 
+Port 5: PortStatus(enabled=True, up=True): 
+Port 6: PortStatus(enabled=True, up=True): 
+Port 7: PortStatus(enabled=True, up=True): 
+Port 8: PortStatus(enabled=True, up=True): 
+</pre>
+</blockquote>
+
+<p>
+You and also try:</p>
+
+<ul>
+<li>fboss_route.py list_vlans
+<li>fboss_route.py list_routes
+<li>fboss_route.py list_arps
+<li>fboss_route.py list_ndps
+</ul>
+
+<p>
+We will use some of these in the demos below, plus more.</p>
+
+
+<h2>ROUTING DEMO #1</h2>
+
+
+<p>
+Clear any demos by running <code>scaledemo.sh clear</code> on all switches. In
+the default configuration switches only know about their own networks and IP
+addresses. <tt>fboss1</tt> can talk to <tt>fboss2</tt> on the networks they
+share, and <tt>fboss2</tt> can talk to <tt>fboss3</tt> on the networks they
+share, but that is all. Let's see:</p>
+
+<p>
+fboss1 can ping himself:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 2001:db:3333:1::1
+PING 2001:db:3333:1::1(2001:db:3333:1::1) 56 data bytes
+64 bytes from 2001:db:3333:1::1: icmp_seq=1 ttl=64 time=0.057 ms
+64 bytes from 2001:db:3333:1::1: icmp_seq=2 ttl=64 time=0.045 ms
+
+--- 2001:db:3333:1::1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.051/0.051/0.051/0.000 ms
+</pre>
+</blockquote>
+
+<p>
+And he can ping the directly-attached fboss2:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 2001:db:3333:1::2
+PING 2001:db:3333:1::2(2001:db:3333:1::2) 56 data bytes
+64 bytes from 2001:db:3333:1::2: icmp_seq=1 ttl=63 time=0.521 ms
+64 bytes from 2001:db:3333:1::2: icmp_seq=2 ttl=63 time=0.487 ms
+
+--- 2001:db:3333:1::2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.510/0.510/0.510/0.000 ms
+</pre>
+</blockquote>
+
+And of course fboss2 can ping the directly-attached fboss3 network:
+
+<blockquote>
+<pre>
+root@fboss2:~# ping6 -c2 2001:db:3333:5::3
+PING 2001:db:3333:5::3(2001:db:3333:5::3) 56 data bytes
+64 bytes from 2001:db:3333:5::3: icmp_seq=1 ttl=63 time=0.527 ms
+64 bytes from 2001:db:3333:5::3: icmp_seq=2 ttl=63 time=0.489 ms
+
+--- 2001:db:3333:5::3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.520/0.520/0.520/0.000 ms
+</pre>
+</blockquote>
+
+<p>
+However, <tt>fboss1</tt> can't ping <tt>fboss3</tt>. This is because
+<tt>fboss1</tt> has no knowledge of the 2001:db:3333:5::/64 network - no
+interfaces with addresses in that subnet and no routes for it.</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 2001:db:3333:5::3
+connect: Network is unreachable
+</pre>
+</blockquote>
+
+<p>
+And in fact he can't ping an interface on fboss2 that he's not connected to though, because he doesn't know about it, so he doens't know what source address or interface to use:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 2001:db:3333:5::2
+connect: Network is unreachable
+</pre>
+</blockquote>
+
+<p>
+But if we tell ping to use an address attached to fboss2, it'll get sent, but won't go anywhere:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 -I 2001:db:3333:1::1  2001:db:3333:5::2
+PING 2001:db:3333:5::2(2001:db:3333:5::2) from 2001:db:3333:1::1 : 56 data bytes
+
+--- 2001:db:3333:5::2 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+</pre>
+</blockquote>
+
+<p>
+This is because even though we'll send it out <tt>front0</tt> the interface to the trident2 switching hardware, it won't know what to do with that packet.</p>
+
+<strong>Now lets begin!</strong>
+
+<p>
+First we tell the switching hardware on fboss1 about the remote network on
+fboss3:</p>
+<blockquote>
+<pre>
+root@fboss1:~# scaledemo.sh 1a
+Running: fboss_route.py add 172.31.5.0/24 172.31.1.2
+Running: fboss_route.py add 2001:db:3333:5::/64 2001:db:3333:1::2
+</pre>
+</blockquote>
+
+<p>
+You can dump what the switch has now:</p>
+<blockquote>
+<pre>
+root@fboss1:~# fboss_route.py list_routes
+Route 172.31.1.0/24 --> 172.31.1.1
+Route 172.31.2.0/24 --> 172.31.2.1
+Route 172.31.3.0/24 --> 172.31.3.1
+Route 172.31.4.0/24 --> 172.31.4.1
+<strong>Route 172.31.5.0/24 --> 172.31.1.2</strong>                  # This is the route we just added
+Route 2001:db:3333:1::/64 --> 2001:db:3333:1::1
+Route 2001:db:3333:2::/64 --> 2001:db:3333:2::1
+Route 2001:db:3333:3::/64 --> 2001:db:3333:3::1
+Route 2001:db:3333:4::/64 --> 2001:db:3333:4::1
+<strong>Route 2001:db:3333:5::/64 --> 2001:db:3333:1::2</strong>     # This is the route we just added
+Route fe80::/64 --> 
+</pre>
+</blockquote>
+
+<p>
+Now we tell fboss3 about the remote network on fboss1:</p>
+<blockquote>
+<pre>
+root@fboss3# scaledemo.sh 1a
+Running: fboss_route.py add 172.31.1.0/24 172.31.5.2
+Running: fboss_route.py add 2001:db:3333:1::/64 2001:db:3333:5::2
+</pre>
+</blockquote>
+
+<p>
+You can dump with that switch has now (new ones bolded):</p>
+<blockquote>
+<pre>
+root@fboss3# fboss_route.py list_routes
+<strong>Route 172.31.1.0/24 --> 172.31.5.2</strong>
+Route 172.31.5.0/24 --> 172.31.5.3
+Route 172.31.6.0/24 --> 172.31.6.3
+Route 172.31.7.0/24 --> 172.31.7.3
+Route 172.31.8.0/24 --> 172.31.8.3
+<strong>Route 2001:db:3333:1::/64 --> 2001:db:3333:5::2</strong>
+Route 2001:db:3333:5::/64 --> 2001:db:3333:5::3
+Route 2001:db:3333:6::/64 --> 2001:db:3333:6::3
+Route 2001:db:3333:7::/64 --> 2001:db:3333:7::3
+Route 2001:db:3333:8::/64 --> 2001:db:3333:8::3
+Route fe80::/64 --> 
+</pre>
+</blockquote>
+
+<p>
+From here we can see a standard ping from fboss1 to fboss3 doesn't work,
+yet:</p>
+<blockquote>
+<pre>
+root@fboss1:~# ping6 2001:db:3333:5::3
+connect: Network is unreachable
+</pre>
+</blockquote>
+
+<p>
+Again, this is because Linux still doesn't have any knowledge of the
+2001:db:3333:5::/64 network even though the Trident now knows about it, so the
+kernel doesn't know what IP to source the traffic from nor to hand it to the
+Trident. If you tell it to use its 2001:db:3333:1::1 address as a source, it
+then knows to send out out the front0 interface that address is on and, the
+Trident can route it out the appropriate port:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 -I 2001:db:3333:1::1  2001:db:3333:5::3
+PING 2001:db:3333:5::3(2001:db:3333:5::3) from 2001:db:3333:1::1 : 56 data bytes
+64 bytes from 2001:db:3333:5::3: icmp_seq=1 ttl=62 time=0.515 ms
+64 bytes from 2001:db:3333:5::3: icmp_seq=2 ttl=62 time=0.491 ms
+
+--- 2001:db:3333:5::3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.497/0.497/0.497/0.000 ms
+root@fboss1:~# 
+</pre>
+</blockquote>
+
+<p>
+We can of course tell Linux to do this by itself:
+
+<blockquote>
+<pre>
+root@fboss1:~# scaledemo.sh 1b
+==> Ensuring 1a is setup...
+Running: fboss_route.py add 172.31.5.0/24 172.31.1.2
+Running: fboss_route.py add 2001:db:3333:5::/64 2001:db:3333:1::2
+==> Adding 1b...
+Running: ip route add 172.31.5.0/24 dev front0 src 172.31.1.1
+Running: ip route add 2001:db:3333:5::/64 dev front0 src 2001:db:3333:1::1
+</pre>
+</blockquote>
+
+<p>
+The second lines add routes that tell Linux what source to use when talking to the remote network, let's look at the Linux routing table now:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ip -6 route show
+2001:db:3333:1::/64 dev front0  proto kernel  metric 256 
+2001:db:3333:2::/64 dev front0  proto kernel  metric 256 
+2001:db:3333:3::/64 dev front0  proto kernel  metric 256 
+2001:db:3333:4::/64 dev front0  proto kernel  metric 256 
+<strong>2001:db:3333:5::/64 dev front0  src 2001:db:3333:1::1  metric 1024</strong>
+fe80::/64 dev ma1  proto kernel  metric 256 
+fe80::/64 dev front0  proto kernel  metric 256 
+</pre>
+</blockquote>
+
+<p>
+And now ping works:</p>
+
+<blockquote>
+<pre>
+root@fboss1:~# ping6 -c2 2001:db:3333:5::3
+PING 2001:db:3333:5::3(2001:db:3333:5::3) 56 data bytes
+64 bytes from 2001:db:3333:5::3: icmp_seq=1 ttl=62 time=0.506 ms
+64 bytes from 2001:db:3333:5::3: icmp_seq=2 ttl=62 time=0.509 ms
+
+--- 2001:db:3333:5::3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.531/0.531/0.531/0.000 ms
+</pre>
+</blockquote>
+
+<h2>ROUTING DEMO 2</h2>
+
+<p>
+The <tt>scaledemo.sh</tt> script setup the trident routes for you using the
+<tt>fboss_route.py</tt> utility and setup Linux routes using <tt>ip -6
+  route</tt>.</p>
+
+<p>
+The <tt>demo</tt> user has access to run <tt>fboss_route.py</tt> directly - can
+you use only that to make fboss3 be able to do <code>ping6 -I 2001:db:3333:5::3
+  2001:db:3333:2::1</code> successfully?</p>
+
+<p>
+Can you further use the <tt>ip</tt> command (via <tt>sudo</tt>) to make
+<code>ping6 2001:db:3333:2::1</code> work on fboss3?</p>
+
+<p>
+Remember you can get back to a clean setup at anytime with <code>scaledemo.sh
+  clear</code>.</p>
+
+<h2>COMMON QUESTIONS</h2>
+
+<ul>
+  <li>Can I do dynamic routing?<br/>
+  Today you'd need to write some code to bridge BGP software like quagga
+  (http://www.nongnu.org/quagga/) with the FBOSS either via thrift, the CLI, or
+  something else. However, OpenNetworkLinux is working on just this and expect
+  to have it done soon.
+  <li>Are you using this in production?<br/>
+  Yes we have built full datacenters using Wedge and will continue to do so.
+  <li>Is there any part of this that is <strong>not</strong> open-source?</br>
+  Yes, the kernel module and opennsl library provided by Broadcom for
+  communicating with the Trident chip over PCI. Other than that everything else
+  here is open source.
+  <li>What about layer2 settings?</br>
+  The version of FBOSS agent here is fairly old - newer code is available on
+  github that we're working with ONL to get an image made from. That has many
+  new features such as turning off and on ports.
+</ul>
+
+</body>
+</html>
+

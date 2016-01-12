@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>
+        FBOSS Wedge Hardware Overview
+</title>
+</head>
+
+<body>
+<h1>FBOSS Wedge Hardware Overview</h1>
+
+<p>
+<img src="wedge-hw-block-diagram.png"><br/>
+<span style="color: red; font-face: bold">NOTE</span>: There are currently
+                errors in this diagram ma1 is the mgmt interface and front0 is
+                the connection to the the trident.
+</p>
+
+<p>
+There three pieces to the FBOSS Wedge 40 switch:
+<ul>
+<li>The BMC (Board Management Controller) - this is a controller that runs an embedded linux and controls things like the fans and the power.
+<li>The Microserver - an SOC (system-on-a-chip) machine with an atom processor and 120GB SSD running Linux. This is where the FBOSS agent runs, and the system you will have a shell on for these demos.
+<li>The Broadcom Trident router and switch - this is the hardware router/switch which we program from FBOSS with the necessary routing and switching information.
+</ul>
+
+<p>
+The BMC has a serial line to the microserver and can get serial on it, as well as powercycle it.</p>
+
+<p>
+The BMC and the microserver are connected by a usb line and each has a usbnet interface to the other.</p>
+
+<p>
+The microserver is connected to the Trident over a PCI bus which speaks a proprietary Broadcom protocol to configure it. That protocol is exposed via OpenNSL libraries and a proprietary kernel driver.</p>
+
+<p>
+The open-source FBOSS agent exposes a CLI and a thrift interface and converts that to the OpenNSL calls to program or query the Trident.</p>
+
+<p>
+The software stack looks like this:</p>
+
+<p>
+<img src="fboss_stack.png"></p>
+
+</body>
+</html>

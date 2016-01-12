@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>
+  FBOSS CONFIG
+</title>
+</head>
+
+<body>
+<h1>Demo Physical &amp; VLAN config</h2>
+
+<h2>Intro info</h2>
+<p>
+Three switches, top to bottom: fboss1, fboss2, fboss3.</p>
+
+<p>Each physical connection (qsfp) is actually 4 physical ports: 1-4, 5-8, etc.</p>
+
+<p>Each switch's IP addresses end in whatever their switch number is: fboss1 is
+always .1 or ::1, fboss 2 is always .2 or ::2, fboss3 is always .3 or ::3.</p>
+
+<p>Each network/port is represented by the second-to-last part of the IP
+address.</p>
+
+<h2>Graphical Diagrams</h2>
+
+<p>
+<img src="wedge-fboss-demo-logical.png"></p>
+
+<p>
+<img src="wedge-fboss-demo-physical.png"></p>
+
+<h2>Textual Diagrams</h2>
+
+<h3>fboss1</h3>
+<ul>
+  <li>Ports 1-4 connect to fboss2 ports 1-4.
+  <ul>
+    <li>Port 1: 172.31.1.0/24 and 2001:db:3333:1::/64
+    (172.31.1.1 / 2001:db:3333:1::1)
+    <li>Port 2: 172.31.2.0/24 and 2001:db:3333:2::/64
+    (172.31.2.1 / 2001:db:3333:2::1)
+    <li>Port 3: 172.31.3.0/24 and 2001:db:3333:3::/64
+    (172.31.3.1 / 2001:db:3333:3::1)
+    <li>Port 4: 172.31.4.0/24 and 2001:db:3333:4::/64
+    (172.31.4.1 / 2001:db:3333:4::1)
+  </ul>
+</ul>
+
+<h3>fboss2</h3>
+<ul>
+  <li>Ports 1-4 connect to fboss1 ports 1-4.
+  <ul>
+    <li>Port 1: 172.31.1.0/24 and 2001:db:3333:1::/64
+    (172.31.1.2 / 2001:db:3333:1::2)
+    <li>Port 2: 172.31.2.0/24 and 2001:db:3333:2::/64
+    (172.31.2.2 / 2001:db:3333:2::2)
+    <li>Port 3: 172.31.3.0/24 and 2001:db:3333:3::/64
+    (172.31.3.2 / 2001:db:3333:3::2)
+    <li>Port 4: 172.31.4.0/24 and 2001:db:3333:4::/64
+    (172.31.4.2 / 2001:db:3333:4::2)
+  </ul>
+  <li>Ports 5-8 connect to fboss3 ports 5-8.
+  <ul>
+    <li>Port 5: 172.31.5.0/24 and 2001:db:3333:5::/64
+    (172.31.5.2 / 2001:db:3333:5::2)
+    <li>Port 6: 172.31.6.0/24 and 2001:db:3333:6::/64
+    (172.31.6.2 / 2001:db:3333:6::2)
+    <li>Port 7: 172.31.7.0/24 and 2001:db:3333:7::/64
+    (172.31.7.2 / 2001:db:3333:7::2)
+    <li>Port 8: 172.31.8.0/24 and 2001:db:3333:8::/64
+    (172.31.8.2 / 2001:db:3333:8::2)
+  </ul>
+</ul>
+
+<h3>fboss3</h3>
+<ul>
+  <li>Ports 5-8 connect to fboss2 ports 5-8.
+  <ul>
+    <li>Port 5: 172.31.5.0/24 and 2001:db:3333:5::/64
+    (172.31.5.3 / 2001:db:3333:5::3)
+    <li>Port 6: 172.31.6.0/24 and 2001:db:3333:6::/64
+    (172.31.6.3 / 2001:db:3333:6::3)
+    <li>Port 7: 172.31.7.0/24 and 2001:db:3333:7::/64
+    (172.31.7.3 / 2001:db:3333:7::3)
+    <li>Port 8: 172.31.8.0/24 and 2001:db:3333:8::/64
+    (172.31.8.3 / 2001:db:3333:8::3)
+  </ul>
+</ul>
+
+</body>
+</html>
+
