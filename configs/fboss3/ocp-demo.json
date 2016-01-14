@@ -448,7 +448,7 @@
       "maxFrameSize": 9000,
       "parserType": 1,
       "routable": true,
-      "ingressVlan": 3001,
+      "ingressVlan": 1000,
       "speed": 0
     },
     {
@@ -458,7 +458,7 @@
       "maxFrameSize": 9000,
       "parserType": 1,
       "routable": true,
-      "ingressVlan": 3002,
+      "ingressVlan": 1000,
       "speed": 0
     },
     {
@@ -468,7 +468,7 @@
       "maxFrameSize": 9000,
       "parserType": 1,
       "routable": true,
-      "ingressVlan": 3003,
+      "ingressVlan": 1000,
       "speed": 0
     },
     {
@@ -478,7 +478,167 @@
       "maxFrameSize": 9000,
       "parserType": 1,
       "routable": true,
-      "ingressVlan": 3004,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 49,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 50,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 51,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 52,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 53,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 54,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 55,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 56,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 57,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 58,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 59,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 60,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 61,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 62,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 63,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
+      "speed": 0
+    },
+    {
+      "logicalID": 64,
+      "state": 2,
+      "minFrameSize": 64,
+      "maxFrameSize": 9000,
+      "parserType": 1,
+      "routable": true,
+      "ingressVlan": 1000,
       "speed": 0
     }
   ],
@@ -523,10 +683,7 @@
       "id": 1005,
       "recordStats": true,
       "mtuIndex": 0,
-      "routable": true,
-      "ipAddresses": [
-        "172.31.5.3"
-      ]
+      "routable": true
     },
     {
       "name": "vlan1006",
