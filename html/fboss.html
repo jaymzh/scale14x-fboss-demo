@@ -67,15 +67,15 @@ given that only the first 8 ports are cabled on these switches, the output is a 
 
 <blockquote>
 <pre> 
-root@fboss1:~# fboss_route.py list_ports | head -8
-Port 1: PortStatus(enabled=True, up=True): 
-Port 2: PortStatus(enabled=True, up=True): 
-Port 3: PortStatus(enabled=True, up=True): 
-Port 4: PortStatus(enabled=True, up=True): 
-Port 5: PortStatus(enabled=True, up=False): 
-Port 6: PortStatus(enabled=True, up=False): 
-Port 7: PortStatus(enabled=True, up=False): 
-Port 8: PortStatus(enabled=True, up=False): 
+demo@fboss1:~$ fboss_route.py list_ports | head -8
+Port 1: [enabled=True, up=True, present=False]
+Port 2: [enabled=True, up=True, present=False]
+Port 3: [enabled=True, up=True, present=False]
+Port 4: [enabled=True, up=True, present=False]
+Port 5: [enabled=True, up=False, present=False]
+Port 6: [enabled=True, up=False, present=False]
+Port 7: [enabled=True, up=False, present=False]
+Port 8: [enabled=True, up=False, present=False]
 </pre>
 </blockquote>
 
@@ -84,15 +84,15 @@ Note that only 4 are in use on fboss1 but on fboss2 there are 8:</p>
 
 <blockquote>
 <pre> 
-root@fboss2:~# fboss_route.py list_ports | head -8
-Port 1: PortStatus(enabled=True, up=True): 
-Port 2: PortStatus(enabled=True, up=True): 
-Port 3: PortStatus(enabled=True, up=True): 
-Port 4: PortStatus(enabled=True, up=True): 
-Port 5: PortStatus(enabled=True, up=True): 
-Port 6: PortStatus(enabled=True, up=True): 
-Port 7: PortStatus(enabled=True, up=True): 
-Port 8: PortStatus(enabled=True, up=True): 
+demo@fboss2:~$ fboss_route.py list_ports | head -8
+Port 1: [enabled=True, up=True, present=False]
+Port 2: [enabled=True, up=True, present=False]
+Port 3: [enabled=True, up=True, present=False]
+Port 4: [enabled=True, up=True, present=False]
+Port 5: [enabled=True, up=True, present=False]
+Port 6: [enabled=True, up=True, present=False]
+Port 7: [enabled=True, up=True, present=False]
+Port 8: [enabled=True, up=True, present=False]
 </pre>
 </blockquote>
 
@@ -110,8 +110,25 @@ You and also try:</p>
 We will use some of these in the demos below, plus more.</p>
 
 
-<h2>ROUTING DEMO #1</h2>
+<h2>LOW LEVEL DEMO</h2>
 
+<p>
+We'll start with a very simple thing - you can turn on and off ports:</p>
+
+<blockquote>
+<pre>
+demo@fboss1:~$ fboss_route.py disable_port 1
+Port 1 disabled
+demo@fboss1:~$ fboss_route.py list_ports | head -1
+Port 1: [enabled=False, up=False, present=False]
+demo@fboss1:~$ fboss_route.py ensable_port 1
+demo@fboss1:~$ fboss_route.py list_ports | head -1
+Port 1: [enabled=True, up=True, present=False]
+</pre>
+</blockquote>
+
+
+<h2>ROUTING DEMO #1</h2>
 
 <p>
 Clear any demos by running <code>scaledemo.sh clear</code> on all switches. In
@@ -125,7 +142,7 @@ fboss1 can ping himself:</p>
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 2001:db:3333:1::1
+demo@fboss1:~$ ping6 -c2 2001:db:3333:1::1
 PING 2001:db:3333:1::1(2001:db:3333:1::1) 56 data bytes
 64 bytes from 2001:db:3333:1::1: icmp_seq=1 ttl=64 time=0.057 ms
 64 bytes from 2001:db:3333:1::1: icmp_seq=2 ttl=64 time=0.045 ms
@@ -141,7 +158,7 @@ And he can ping the directly-attached fboss2:</p>
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 2001:db:3333:1::2
+demo@fboss1:~$ ping6 -c2 2001:db:3333:1::2
 PING 2001:db:3333:1::2(2001:db:3333:1::2) 56 data bytes
 64 bytes from 2001:db:3333:1::2: icmp_seq=1 ttl=63 time=0.521 ms
 64 bytes from 2001:db:3333:1::2: icmp_seq=2 ttl=63 time=0.487 ms
@@ -156,7 +173,7 @@ And of course fboss2 can ping the directly-attached fboss3 network:
 
 <blockquote>
 <pre>
-root@fboss2:~# ping6 -c2 2001:db:3333:5::3
+demo@fboss2:~$ ping6 -c2 2001:db:3333:5::3
 PING 2001:db:3333:5::3(2001:db:3333:5::3) 56 data bytes
 64 bytes from 2001:db:3333:5::3: icmp_seq=1 ttl=63 time=0.527 ms
 64 bytes from 2001:db:3333:5::3: icmp_seq=2 ttl=63 time=0.489 ms
@@ -174,7 +191,7 @@ interfaces with addresses in that subnet and no routes for it.</p>
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 2001:db:3333:5::3
+demo@fboss1:~$ ping6 -c2 2001:db:3333:5::3
 connect: Network is unreachable
 </pre>
 </blockquote>
@@ -184,7 +201,7 @@ And in fact he can't ping an interface on fboss2 that he's not connected to thou
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 2001:db:3333:5::2
+demo@fboss1:~$ ping6 -c2 2001:db:3333:5::2
 connect: Network is unreachable
 </pre>
 </blockquote>
@@ -194,7 +211,7 @@ But if we tell ping to use an address attached to fboss2, it'll get sent, but wo
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 -I 2001:db:3333:1::1  2001:db:3333:5::2
+demo@fboss1:~$ ping6 -c2 -I 2001:db:3333:1::1  2001:db:3333:5::2
 PING 2001:db:3333:5::2(2001:db:3333:5::2) from 2001:db:3333:1::1 : 56 data bytes
 
 --- 2001:db:3333:5::2 ping statistics ---
@@ -212,7 +229,7 @@ First we tell the switching hardware on fboss1 about the remote network on
 fboss3:</p>
 <blockquote>
 <pre>
-root@fboss1:~# scaledemo.sh 1a
+demo@fboss1:~$ scaledemo.sh 1a
 Running: fboss_route.py add 172.31.5.0/24 172.31.1.2
 Running: fboss_route.py add 2001:db:3333:5::/64 2001:db:3333:1::2
 </pre>
@@ -222,7 +239,7 @@ Running: fboss_route.py add 2001:db:3333:5::/64 2001:db:3333:1::2
 You can dump what the switch has now:</p>
 <blockquote>
 <pre>
-root@fboss1:~# fboss_route.py list_routes
+demo@fboss1:~$ fboss_route.py list_routes
 Route 172.31.1.0/24 --> 172.31.1.1
 Route 172.31.2.0/24 --> 172.31.2.1
 Route 172.31.3.0/24 --> 172.31.3.1
@@ -241,7 +258,7 @@ Route fe80::/64 -->
 Now we tell fboss3 about the remote network on fboss1:</p>
 <blockquote>
 <pre>
-root@fboss3# scaledemo.sh 1a
+demo@fboss3# scaledemo.sh 1a
 Running: fboss_route.py add 172.31.1.0/24 172.31.5.2
 Running: fboss_route.py add 2001:db:3333:1::/64 2001:db:3333:5::2
 </pre>
@@ -251,7 +268,7 @@ Running: fboss_route.py add 2001:db:3333:1::/64 2001:db:3333:5::2
 You can dump with that switch has now (new ones bolded):</p>
 <blockquote>
 <pre>
-root@fboss3# fboss_route.py list_routes
+demo@fboss3# fboss_route.py list_routes
 <strong>Route 172.31.1.0/24 --> 172.31.5.2</strong>
 Route 172.31.5.0/24 --> 172.31.5.3
 Route 172.31.6.0/24 --> 172.31.6.3
@@ -271,7 +288,7 @@ From here we can see a standard ping from fboss1 to fboss3 doesn't work,
 yet:</p>
 <blockquote>
 <pre>
-root@fboss1:~# ping6 2001:db:3333:5::3
+demo@fboss1:~$ ping6 2001:db:3333:5::3
 connect: Network is unreachable
 </pre>
 </blockquote>
@@ -286,7 +303,7 @@ Trident can route it out the appropriate port:</p>
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 -I 2001:db:3333:1::1  2001:db:3333:5::3
+demo@fboss1:~$ ping6 -c2 -I 2001:db:3333:1::1  2001:db:3333:5::3
 PING 2001:db:3333:5::3(2001:db:3333:5::3) from 2001:db:3333:1::1 : 56 data bytes
 64 bytes from 2001:db:3333:5::3: icmp_seq=1 ttl=62 time=0.515 ms
 64 bytes from 2001:db:3333:5::3: icmp_seq=2 ttl=62 time=0.491 ms
@@ -294,7 +311,7 @@ PING 2001:db:3333:5::3(2001:db:3333:5::3) from 2001:db:3333:1::1 : 56 data bytes
 --- 2001:db:3333:5::3 ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
 rtt min/avg/max/mdev = 0.497/0.497/0.497/0.000 ms
-root@fboss1:~# 
+demo@fboss1:~$ 
 </pre>
 </blockquote>
 
@@ -303,7 +320,7 @@ We can of course tell Linux to do this by itself:
 
 <blockquote>
 <pre>
-root@fboss1:~# scaledemo.sh 1b
+demo@fboss1:~$ scaledemo.sh 1b
 ==> Ensuring 1a is setup...
 Running: fboss_route.py add 172.31.5.0/24 172.31.1.2
 Running: fboss_route.py add 2001:db:3333:5::/64 2001:db:3333:1::2
@@ -318,7 +335,7 @@ The second lines add routes that tell Linux what source to use when talking to t
 
 <blockquote>
 <pre>
-root@fboss1:~# ip -6 route show
+demo@fboss1:~$ ip -6 route show
 2001:db:3333:1::/64 dev front0  proto kernel  metric 256 
 2001:db:3333:2::/64 dev front0  proto kernel  metric 256 
 2001:db:3333:3::/64 dev front0  proto kernel  metric 256 
@@ -334,7 +351,7 @@ And now ping works:</p>
 
 <blockquote>
 <pre>
-root@fboss1:~# ping6 -c2 2001:db:3333:5::3
+demo@fboss1:~$ ping6 -c2 2001:db:3333:5::3
 PING 2001:db:3333:5::3(2001:db:3333:5::3) 56 data bytes
 64 bytes from 2001:db:3333:5::3: icmp_seq=1 ttl=62 time=0.506 ms
 64 bytes from 2001:db:3333:5::3: icmp_seq=2 ttl=62 time=0.509 ms
