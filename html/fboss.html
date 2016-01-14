@@ -362,6 +362,18 @@ rtt min/avg/max/mdev = 0.531/0.531/0.531/0.000 ms
 </pre>
 </blockquote>
 
+<p>
+"But wait!" you say, "You could be routing all this in the agent!" - we could. So let's shut down the agent on the switch in the middle and watch pings still work.</p>
+
+<blockquote>
+<pre>
+demo@fboss2:~$ service fboss_wedge_agent stop
+</blockquote>
+</pre>
+
+<p>
+See the pings from <tt>fboss1</tt> to <tt>fboss3</tt> still working? The Trident2 chiup is routing those packets. Don't forget to start the agent again! It'll take about 15 seconds to initialize. By the way, the reason you can't stop the agent on <tt>fboss1</tt> or <tt>fboss3</tt> is because the agent is what passes packets between the trident and the microserver, and the microserver is what's replying to the ping.</p>
+
 <h2>ROUTING DEMO 2</h2>
 
 <p>
