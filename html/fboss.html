@@ -365,6 +365,31 @@ Can you further use the <tt>ip</tt> command (via <tt>sudo</tt>) to make
 Remember you can get back to a clean setup at anytime with <code>scaledemo.sh
   clear</code>.</p>
 
+<h2>OTHER STUFF</h2>
+
+<p>
+Vlan and interface configuration is in <tt>/etc/fboss/ocp-demo.json</tt>
+
+<h2>TROUBLESHOOTING</h2>
+
+<h3>Agent Crash</h3>
+<p>
+There are things you can do that will make the FBOSS agent crash. If you see an error from <tt>fboss_route.py</tt> like <tt>Could not connect to localhost:5909</tt> then that probably happened (you can verify with <tt>ps -ef | grep fboss</tt>). If so you have sudo access to restart the agent:</p>
+
+<blockquote>
+<pre>
+sudo service fboss_wedge_agent restart
+</pre>
+</blockquote>
+
+<p>
+The takes about 15 seconds to fully initialize.</p>
+
+<h3>
+
+
+
+
 <h2>COMMON QUESTIONS</h2>
 
 <ul>
