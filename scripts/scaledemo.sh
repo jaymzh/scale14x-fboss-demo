@@ -51,7 +51,7 @@ demo1b_setup() {
 
   echo "==> Adding 1b..."
   run "sudo ip route add $remotenet dev front0 src $myip"
-  run "sudo ip route add $remote6net dev front0 src $my6ip"
+  run "sudo ip -6 route add $remote6net dev front0 src $my6ip"
 }
 
 route_cleanup() {

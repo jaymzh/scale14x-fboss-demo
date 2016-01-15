@@ -51,9 +51,9 @@ Before we start, this is where you can find all this stuff.</p>
 <p>
 The microserver can query a REST API on the BMC (bmc software is all open-source). Try it!</p>
 <ul>
-  <li>List APIs: <blockquote>bmc_stats.py -l</blockquote></li>
-  <li>Call API: <blockquote>bmc_stats.py -g /api/sys/mb</blockquote></li>
-  <li>Call all APIs: <blockquote>bmc_stats.py -g all</blockquote></li>
+  <li>List APIs: <blockquote><pre>bmc_stats.py -l<pre></blockquote></li>
+  <li>Call API: <blockquote><pre>bmc_stats.py -g /api/sys/mb<pre></blockquote></li>
+  <li>Call all APIs: <blockquote><pre>bmc_stats.py -g all<pre></blockquote></li>
 </ul>
 
 <h2>TOOLS DEMO</h2>
@@ -85,7 +85,7 @@ Port 8: [enabled=True, up=False, present=False]
 </blockquote>
 
 <p>
-Note that only 4 are in use on fboss1 but on fboss2 there are 8:</p>
+Note that only 4 are in use on <tt>fboss1</tt> but on <tt>fboss2</tt> there are 8:</p>
 
 <blockquote>
 <pre> 
@@ -143,7 +143,7 @@ share, and <tt>fboss2</tt> can talk to <tt>fboss3</tt> on the networks they
 share, but that is all. Let's see:</p>
 
 <p>
-fboss1 can ping himself:</p>
+<tt>fboss1</tt> can ping himself:</p>
 
 <blockquote>
 <pre>
@@ -159,7 +159,7 @@ rtt min/avg/max/mdev = 0.051/0.051/0.051/0.000 ms
 </blockquote>
 
 <p>
-And he can ping the directly-attached fboss2:</p>
+And he can ping the directly-attached <tt>fboss2</tt>:</p>
 
 <blockquote>
 <pre>
@@ -174,7 +174,7 @@ rtt min/avg/max/mdev = 0.510/0.510/0.510/0.000 ms
 </pre>
 </blockquote>
 
-And of course fboss2 can ping the directly-attached fboss3 network:
+And of course <tt>fboss2</tt> can ping the directly-attached <tt>fboss3</tt> network:
 
 <blockquote>
 <pre>
@@ -202,7 +202,7 @@ connect: Network is unreachable
 </blockquote>
 
 <p>
-And in fact he can't ping an interface on fboss2 that he's not connected to though, because he doesn't know about it, so he doens't know what source address or interface to use:</p>
+And in fact he can't ping an interface on <tt>fboss2</tt> that he's not connected to though, because he doesn't know about it, so he doens't know what source address or interface to use:</p>
 
 <blockquote>
 <pre>
@@ -212,7 +212,7 @@ connect: Network is unreachable
 </blockquote>
 
 <p>
-But if we tell ping to use an address attached to fboss2, it'll get sent, but won't go anywhere:</p>
+But if we tell ping to use an address attached to <tt>fboss2</tt>, it'll get sent, but won't go anywhere:</p>
 
 <blockquote>
 <pre>
@@ -230,8 +230,8 @@ This is because even though we'll send it out <tt>front0</tt> the interface to t
 <strong>Now lets begin!</strong>
 
 <p>
-First we tell the switching hardware on fboss1 about the remote network on
-fboss3:</p>
+First we tell the switching hardware on <tt>fboss1</tt> about the remote network on
+<tt>fboss3</tt>:</p>
 <blockquote>
 <pre>
 demo@fboss1:~$ scaledemo.sh 1a
@@ -260,7 +260,7 @@ Route fe80::/64 -->
 </blockquote>
 
 <p>
-Now we tell fboss3 about the remote network on fboss1:</p>
+Now we tell <tt>fboss3</tt> about the remote network on <tt>fboss1</tt>:</p>
 <blockquote>
 <pre>
 demo@fboss3# scaledemo.sh 1a
@@ -289,7 +289,7 @@ Route fe80::/64 -->
 </blockquote>
 
 <p>
-From here we can see a standard ping from fboss1 to fboss3 doesn't work,
+From here we can see a standard ping from <tt>fboss1</tt> to <tt>fboss3</tt> doesn't work,
 yet:</p>
 <blockquote>
 <pre>
@@ -388,12 +388,12 @@ The <tt>scaledemo.sh</tt> script setup the trident routes for you using the
 
 <p>
 The <tt>demo</tt> user has access to run <tt>fboss_route.py</tt> directly - can
-you use only that to make fboss3 be able to do <code>ping6 -I 2001:db:3333:5::3
+you use only that to make <tt>fboss3</tt> be able to do <code>ping6 -I 2001:db:3333:5::3
   2001:db:3333:2::1</code> successfully?</p>
 
 <p>
 Can you further use the <tt>ip</tt> command (via <tt>sudo</tt>) to make
-<code>ping6 2001:db:3333:2::1</code> work on fboss3?</p>
+<code>ping6 2001:db:3333:2::1</code> work on <tt>fboss3</tt>?</p>
 
 <p>
 Remember you can get back to a clean setup at anytime with <code>scaledemo.sh
