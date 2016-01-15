@@ -24,6 +24,16 @@ Mount the usb key as root on the laptop, cd to the mount point as (again, as roo
 * Copy the relevant keys to ~demo/.ssh/
 * Not provide write-access to said keys
 * Update /etc/hosts with IP addresses we'll later use for the switches to be `fboss1`, `fboss2`, and `fboss3`.
+* Copy over a fluxbox config - see below
+
+What window manager you setup is up to you... if you use fluxbox the provided configs will:
+* set a default resolution - you probably want to change it
+* Auto-setup 4 windows on login, where 3 of them SSH to the the relevant switches
+* Setup keybindings:
+** alt+1 - Virtual terminal 1 (where the shells will be)
+** alt+2 - Virtual terminal 2 (where the web browser will be)
+** alt+t - Open a new virtual terminal
+** alt+w - Open a web browser
 
 ### Setting up the switches
 

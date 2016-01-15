@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# fluxbox startup-script:
+#
+# Lines starting with a '#' are ignored.
+
+# Change your keymap:
+xmodmap "/home/demo/.Xmodmap"
+xrandr -s 1920x1080
+
+xterm="rxvt-unicode -ls +sb -sh 45 -fade 50 -fadecolor black -fg white -bg black -sr -sl 1000"
+size="140x37"
+$xterm -geometry ${size}+0+0 -e /bin/bash -c 'ssh fboss1' &
+$xterm -geometry ${size}+846+0 -e /bin/bash -c 'ssh fboss2' &
+$xterm -geometry ${size}+0-49 -e /bin/bash -c 'ssh fboss3' &
+$xterm -geometry ${size}+846-49  &
+
+# Applications you want to run with fluxbox.
+# MAKE SURE THAT APPS THAT KEEP RUNNING HAVE AN ''&'' AT THE END.
+#
+# unclutter -idle 2 &
+# wmnd &
+# wmsmixer -w &
+# idesk &
+#
+# Debian-local change:
+#   - fbautostart has been added with a quick hack to check to see if it
+#     exists. If it does, we'll start it up by default.
+which fbautostart > /dev/null
+if [ $? -eq 0 ]; then
+    fbautostart
+fi
+
+# And last but not least we start fluxbox.
+# Because it is the last app you have to run it with ''exec'' before it.
+
+exec fluxbox
+# or if you want to keep a log:
+# exec fluxbox -log "/home/demo/.fluxbox/log"

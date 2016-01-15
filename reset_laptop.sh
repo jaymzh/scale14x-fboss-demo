@@ -11,3 +11,6 @@ chmod 640 $PRIVKEY
 
 echo "Restoring hostnames"
 cp laptop_configs/hosts /etc/hosts
+
+echo "Restoring fluxbox state"
+cp laptop_configs/.fluxbox/* /home/demo/.fluxbox/
