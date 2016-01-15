@@ -81,6 +81,6 @@ c|clean|clear|cleanup)
   cleanup
   ;;
 *)
-  echo "$0 [1|2|clean]"
+  echo "$0 [1a|1b|clean]"
   ;;
 esac
