@@ -6,7 +6,7 @@ This is everything used to produce the FBOSS demo at SCALE 14X.
 
 ### Keypairs
 
-You will need to sets of SSH keys - one for root and one for "demo" access. Creeate them as id_rsa-fboss_demo (and `id_rsa-fboss_demo.pub`) and `id_rsa-fboss_root` (and `id_rsa-fboss_root`). There should be no passphrase on the `demo` key, but a passphrase on the `root` key.
+You will need to sets of SSH keys - one for root and one for "demo" access. Create them as id_rsa-fboss_demo (and `id_rsa-fboss_demo.pub`) and `id_rsa-fboss_root` (and `id_rsa-fboss_root`). There should be no passphrase on the `demo` key, but a passphrase on the `root` key.
 
 ### Setting up the USB key
 
@@ -95,13 +95,13 @@ Now, doing so means that one can SSH between the two so you'll want to change th
 By default none of these things will persist on a BMC reboot. To make these persistent you need to copy the relevant files to the persistent flash:
 
 ```
-cd /mnt/flash
-mkdir network
-cp /etc/network/interfaces network/
-cp /etc/{passwd,shadow} .
+cd /mnt/data
+mkdir -p etc/network
+cp /etc/network/interfaces etc/network/
+cp /etc/{passwd,shadow} etc
 ```
 
-And then create a rc.early hook to change the real files to symlinks to your new files. Make `/mnt/data/rc.early`
+And then create a rc.early hook to change the real files to symlinks to your new files. Make `/mnt/data/etc/rc.early`
 
 ```
 #!/bin/bash
@@ -114,7 +114,7 @@ for file in $files; do
 done
 ```
 
-Now you can run that `rc.early` script to move everything around and now things should be persistent. (`/etc/rc.early` calls `/mnt/data/rc.early`).
+Now you can run that `rc.early` script to move everything around and now things should be persistent. (`/etc/init.d/rc.early` calls `/mnt/data/etc/rc.early`).
 
 ## Running the Demo
 
